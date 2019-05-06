@@ -94,6 +94,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var diePosition5: CGPoint = CGPoint()
     var diePosition6: CGPoint = CGPoint()
 
+    var dieSelected: Bool = false
+
     // MARK: ********** DieFace Variables **********
 
     var dieFace1: DieFace = DieFace(faceValue: 1)
@@ -228,6 +230,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func handleTouches(TouchedNode: SKNode) {
+
         var dieName = ""
         let touchedNode = TouchedNode
         if let name = touchedNode.name {
@@ -303,43 +306,51 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func handleTouchedDie(TouchedNode: SKNode, touchedDie: Die) {
+        dieSelected = true
         let count = touchedDie.dieFace!.countThisRoll
         if touchedDie.dieFace!.countThisRoll >= 3 {
             for die in currentDiceArray where die.dieFace!.countThisRoll == count {
                 die.selected = true
+                currentPlayer.hasScoringDice = true
                 selectedDieArray.append(die)
                 switch die.dieFace!.countThisRoll {
                 case 3:
-                    threeOAK = true
-                    scoreDice(key: "ThreeOAK", isComplete: handlerBlock)
+                    moveSelectedDice(count: count, isComplete: handlerBlock)
+                    scoringCombosArray["ThreeOAK"] = true
                 case 4:
-                    fourOAK = true
-                    scoreDice(key: "FourOAK", isComplete: handlerBlock)
+                    moveSelectedDice(count: count, isComplete: handlerBlock)
+                    scoringCombosArray["FourOAK"] = true
                 case 5:
-                    fiveOAK = true
-                    scoreDice(key: "FiveOAK", isComplete: handlerBlock)
+                    moveSelectedDice(count: count, isComplete: handlerBlock)
+                    scoringCombosArray["FiveOAK"] = true
+
                 case 6:
-                    sixOAK = true
-                    scoreDice(key: "SixOAK", isComplete: handlerBlock)
+                    moveSelectedDice(count: count, isComplete: handlerBlock)
+                    scoringCombosArray["SixOAK"] = true
                 default:
                     break
                 }
-                moveSelectedDice(count: count, isComplete: handlerBlock)
-                die.dieFace!.countThisRoll = 0
-                currentPlayer.currentRollScore += currentScore
             }
         } else if touchedDie.dieFace!.faceValue == 1 || touchedDie.dieFace!.faceValue == 5 {
+            scoringCombosArray["Singles"] = true
             touchedDie.physicsBody = nil
             touchedDie.zRotation = 0
             touchedDie.selected = true
+            currentPlayer.hasScoringDice = true
             touchedDie.position = getFirstPlaceHolderPosition()
             selectedDieArray.append(touchedDie)
-            scoreDice(key: "Singles", isComplete: handlerBlock)
             resetDiePhysics()
         } else {
             selectScoringDieMessage(on: scene!, title: "Select a Scoring Die", message: GameConstants.Messages.NoScoringDieSelected)
         }
-        getScoringCombos(isComplete: handlerBlock)
+        for (key,value) in scoringCombosArray {
+            if scoringCombosArray[key] == true {
+                scoreDice(key: key, isComplete: handlerBlock)
+                print(key)
+            }
+            print(key,value)
+        }
+        currentDiceArray.removeAll(where: { $0.selected })
     }
 
     func newGameButtonTouched() {
@@ -356,9 +367,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         currentGame = Game()
         resetDice()
         resetCurrentScoreVariables()
-        resetCounters()
         resetArrays()
-        resetScoringCombos()
+        resetScoringCombosArray()
         resetDiePhysics()
         resetDieVariables()
         resetPlayerScoreVariables()
@@ -441,13 +451,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for die in currentDiceArray {
             die.selected = false
         }
+        resetPlaceHoldersArray()
         resetCurrentScoreVariables()
         resetDice()
         resetDiePhysics()
-        resetCounters()
+        resetDieVariables()
         resetArrays()
         positionDice()
-        //returnDiceToHomePosition()
     }
 
     func nextPlayer() {
@@ -466,7 +476,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func startNewRoll() {
         resetPlaceHoldersArray()
         resetDice()
-        resetCounters()
+        resetDieVariables()
         currentPlayer.firstRoll = true
         currentPlayer.hasScoringDice = false
         rollDice()
