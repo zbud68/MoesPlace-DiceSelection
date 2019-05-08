@@ -29,7 +29,7 @@
 		4DE4A22E2211D74300671D07 /* BackGround_Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4A22D2211D74300671D07 /* BackGround_Ext.swift */; };
 		4DE4A2312211D82800671D07 /* GameTable_Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4A2302211D82800671D07 /* GameTable_Ext.swift */; };
 		4DE4A2342211D87100671D07 /* Window_Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4A2332211D87100671D07 /* Window_Ext.swift */; };
-		4DE4A2362211D8EA00671D07 /* Icon_Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4A2352211D8EA00671D07 /* Icon_Ext.swift */; };
+		4DE4A2362211D8EA00671D07 /* Buttons_Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4A2352211D8EA00671D07 /* Buttons_Ext.swift */; };
 		4DE4A2382211D96D00671D07 /* Dice_Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4A2372211D96D00671D07 /* Dice_Ext.swift */; };
 		4DFDFC6C222063D000439E67 /* Die.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFDFC6B222063D000439E67 /* Die.swift */; };
 /* End PBXBuildFile section */
@@ -58,7 +58,7 @@
 		4DE4A22D2211D74300671D07 /* BackGround_Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackGround_Ext.swift; sourceTree = "<group>"; };
 		4DE4A2302211D82800671D07 /* GameTable_Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTable_Ext.swift; sourceTree = "<group>"; };
 		4DE4A2332211D87100671D07 /* Window_Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window_Ext.swift; sourceTree = "<group>"; };
-		4DE4A2352211D8EA00671D07 /* Icon_Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icon_Ext.swift; sourceTree = "<group>"; };
+		4DE4A2352211D8EA00671D07 /* Buttons_Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons_Ext.swift; sourceTree = "<group>"; };
 		4DE4A2372211D96D00671D07 /* Dice_Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dice_Ext.swift; sourceTree = "<group>"; };
 		4DFDFC6B222063D000439E67 /* Die.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Die.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -124,7 +124,7 @@
 				4DE4A22D2211D74300671D07 /* BackGround_Ext.swift */,
 				4DE4A2302211D82800671D07 /* GameTable_Ext.swift */,
 				4DE4A2332211D87100671D07 /* Window_Ext.swift */,
-				4DE4A2352211D8EA00671D07 /* Icon_Ext.swift */,
+				4DE4A2352211D8EA00671D07 /* Buttons_Ext.swift */,
 				4DE4A2372211D96D00671D07 /* Dice_Ext.swift */,
 				4D374D1E221E104A00834241 /* Menus_Ext.swift */,
 				4D385C28225DAC2C00CFF531 /* UIAlerts.swift */,
@@ -262,7 +262,7 @@
 				4DA971772215E2E500CEB115 /* Game.swift in Sources */,
 				4D374D1F221E104A00834241 /* Menus_Ext.swift in Sources */,
 				4D6396A7220165CB004B6718 /* GameViewController.swift in Sources */,
-				4DE4A2362211D8EA00671D07 /* Icon_Ext.swift in Sources */,
+				4DE4A2362211D8EA00671D07 /* Buttons_Ext.swift in Sources */,
 				4D63969F220165CB004B6718 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

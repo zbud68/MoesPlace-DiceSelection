@@ -111,6 +111,9 @@ extension GameScene {
             die6.removeFromParent()
             die6PlaceHolder.removeFromParent()
         }
+        for die in diceArray {
+            die.zPosition = gameTable.zPosition + 5
+        }
         currentDiceArray = diceArray
         positionDice()
     }

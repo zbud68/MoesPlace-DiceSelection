@@ -22,7 +22,7 @@ enum DieSides {
 }
 
 enum GameState {
-    case NewGame, InProgress, NewRound, GameOver
+    case NewGame, Rolling, InProgress, NewRound, GameOver
 }
 
 let handlerBlock: (Bool) -> Void = {
@@ -32,17 +32,47 @@ let handlerBlock: (Bool) -> Void = {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
+
+    var scoreLabel: SKLabelNode!
+
+    var score = 0 {
+        didSet {
+            scoreLabel.text = "\(currentPlayer.name):  \(score)"
+        }
+    }
+
+    var targetScoreLabel: SKLabelNode!
+
+    var targetScore = 10000 {
+        didSet {
+            targetScoreLabel.text = "  \(targetScore)"
+        }
+    }
+
+    var numPlayersLabel: SKLabelNode!
+
+    var numPlayers = 2 {
+        didSet {
+            numPlayersLabel.text = "  \(numPlayers)"
+        }
+    }
+
+
     // MARK: ********** Class Variables Section **********
 
     let physicsContactDelegate = self
 
     // MARK: ********** Game Variables **********
 
+    var rolling = false
     var gameState = GameState.NewGame {
         willSet {
             switch newValue {
             case .NewGame:
                 setupNewGame()
+            case .Rolling:
+                rolling = true
+                rollDice()
             case .InProgress:
                 print("game in progress")
             case .NewRound:
@@ -54,7 +84,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     var currentGame: Game = Game()
-
     // MARK: ********** Player Variables **********
 
     var player1 = Player(name: "Player1", score: 0, currentRollScore: 0, hasScoringDice: false)
@@ -129,7 +158,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var currentScore: Int = 0
     var currentRollScoreLabel: SKLabelNode = SKLabelNode()
 
-    var previousRollScore = 0
+    //var previousRollScore = 0
 
     // MARK: ********** User Interface Variables **********
 
@@ -140,7 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let logo2 = SKLabelNode(text: "Plus")
     var mainMenuHolder: SKNode = SKNode()
     var settingsMenuHolder: SKNode = SKNode()
-    var iconWindowIconsHolder: SKNode = SKNode()
+    var buttonWindowbuttonsHolder: SKNode = SKNode()
     var gameTableHolder: SKNode = SKNode()
     var gameTable = SKSpriteNode()
     var background = SKSpriteNode()
@@ -168,12 +197,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var settingsButton: SKSpriteNode = SKSpriteNode()
     var homeButton: SKSpriteNode = SKSpriteNode()
     var backButton: SKSpriteNode = SKSpriteNode()
-    var iconTouched: String = String("")
+    var buttonTouched: String = String("")
     var rollDiceButton: SKSpriteNode = SKSpriteNode()
     var keepScoreButton: SKSpriteNode = SKSpriteNode()
+    var fiveDiceButton: SKSpriteNode = SKSpriteNode()
+    var sixDiceButton: SKSpriteNode = SKSpriteNode()
+    var numPlayersPlusButton: SKSpriteNode = SKSpriteNode()
+    var numPlayersMinusButton: SKSpriteNode = SKSpriteNode()
+    var targetScorePlusButton: SKSpriteNode = SKSpriteNode()
+    var targetScoreMinusButton: SKSpriteNode = SKSpriteNode()
+    var matchScoreOnButton: SKSpriteNode = SKSpriteNode()
+    var matchScoreOffButton: SKSpriteNode = SKSpriteNode()
+    //var numPlayersLabel: SKLabelNode = SKLabelNode()
 
     var buttonWindow: SKSpriteNode = SKSpriteNode()
     var scoresWindow: SKSpriteNode = SKSpriteNode()
+
+    var matchScoreButtonPosition: CGPoint = CGPoint()
 
     var mainMenuButtonsArray = [SKSpriteNode]()
     var settingsMenuButtonsArray = [SKSpriteNode]()
@@ -203,15 +243,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         setupBackGround()
         setupGameTable()
+        setupScoreLabel()
         setupLogo()
         setupButtonWindow()
         setupScoresWindow()
         setupMainMenu()
         setupSettingsMenu()
+        setupSettingsMenuLabels()
         setupHelpMenu()
         menuArray = [mainMenu, settingsMenu, helpMenu]
         setupPlayers()
-        setupCurrentRollScoreLabel()
         showMenu(menu: mainMenu)
         getPlaceHolders()
         setupDice()
@@ -278,20 +319,51 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     pauseButtonTouched()
                 }
 
-            case "NumberOfPlayersInput":
-                print("num of players touched")
+            case "FiveDiceButton":
+                currentGame.numDice = 5
+                print("numDice: \(currentGame.numDice)")
+                setupNewGame()
 
-            case "NumberOfDiceInput":
-                print("num of dice touched")
-
-            case "TargetScoreInput":
-                print("target score input touched")
+            case "SixDiceButton":
+                currentGame.numDice = 6
+                print("numDice: \(currentGame.numDice)")
+                setupNewGame()
 
             case "MatchScoreOff":
                 print("match score off touched")
+                matchScoreOnButton.zPosition = matchScoreOffButton.zPosition
+                matchScoreOffButton.position = CGPoint(x: 2000, y: 0)
+                matchScoreOnButton.position = matchScoreButtonPosition
+                currentGame.matchTargetScore = true
+                setupNewGame()
 
             case "MatchScoreOn":
                 print("match score on touched")
+                matchScoreOffButton.zPosition = matchScoreOnButton.zPosition
+                matchScoreOnButton.position = CGPoint(x: 2000, y: 0)
+                matchScoreOffButton.position = matchScoreButtonPosition
+                currentGame.matchTargetScore = false
+                setupNewGame()
+
+            case "TargetScorePlus":
+               targetScore += 500
+               currentGame.targetScore = targetScore
+                setupNewGame()
+
+            case "TargetScoreMinus":
+                targetScore -= 500
+                currentGame.targetScore = targetScore
+                setupNewGame()
+
+            case "NumPlayersPlus":
+                numPlayers += 1
+                currentGame.numPlayers = numPlayers
+                setupNewGame()
+
+            case "NumPlayersMinus":
+                numPlayers -= 1
+                currentGame.numPlayers = numPlayers
+                setupNewGame()
 
             default:
                 break
@@ -360,11 +432,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             hideMenu(menu: mainMenu)
             setupNewGame()
         }
+        print("numDice: \(currentGame.numDice), numPlayers: \(currentGame.numPlayers), matchScore: \(currentGame.matchTargetScore), targetScore: \(currentGame.targetScore)")
     }
 
     func setupNewGame() {
         gameState = .InProgress
-        currentGame = Game()
         resetDice()
         resetCurrentScoreVariables()
         resetArrays()
@@ -421,9 +493,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func keepScoreButtonTouched() {
-        displayPlayerScore(playerName: currentPlayer.name)
-        prepareForNextPlayer()
-        nextPlayer()
+        if currentScore == 0 {
+            selectScoringDieMessage(on: scene!, title: "Select a Scoring Die", message: GameConstants.Messages.NoScoringDieSelected)
+        } else {
+            displayPlayerScore(playerName: currentPlayer.name)
+            prepareForNextPlayer()
+            nextPlayer()
+        }
     }
 
     func displayPlayerScore(playerName: String) {
@@ -443,7 +519,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         default:
             break
         }
-        previousRollScore = currentPlayer.currentRollScore
     }
 
     func prepareForNextPlayer() {

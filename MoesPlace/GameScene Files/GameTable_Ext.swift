@@ -24,7 +24,7 @@ extension GameScene {
         logo.fontSize = GameConstants.Sizes.Logo1Font
         logo.alpha = 0.65
         logo.position = CGPoint(x: 0, y: -50)
-        logo.zPosition = GameConstants.ZPositions.Logo
+        logo.zPosition = gameTable.zPosition + 1
         
         logo2.fontName = GameConstants.StringConstants.FontName
         logo2.fontColor = GameConstants.Colors.LogoFont
@@ -32,7 +32,7 @@ extension GameScene {
         logo2.alpha = 0.65
         logo2.zRotation = 75
         
-        logo2.zPosition = GameConstants.ZPositions.Logo
+        logo2.zPosition = logo.zPosition
         logo2.position = CGPoint(x: -185, y: -25)
         gameTable.addChild(logo)
         logo.addChild(logo2)
@@ -59,5 +59,15 @@ extension GameScene {
         gameTable.addChild(playerNameLabel)
     }
 
-    
+    func setupScoreLabel() {
+        scoreLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
+        scoreLabel.zPosition = gameTable.zPosition + 5
+        scoreLabel.fontSize = 22
+        scoreLabel.fontColor = UIColor.brown
+        scoreLabel.alpha = 0.65
+        scoreLabel.text = "Player 1: 0"
+        scoreLabel.horizontalAlignmentMode = .center
+        scoreLabel.position = CGPoint(x: 0, y: (gameTable.frame.midY + (gameTable.size.height / 4)))
+        gameTable.addChild(scoreLabel)
+    }
 }

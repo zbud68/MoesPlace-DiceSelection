@@ -9,7 +9,6 @@
 import SpriteKit
 
 extension GameScene {
-
     func setupScoringCombosArray() {
         scoringCombosArray = ["Straight":false, "FullHouse":false, "ThreeOAK":false, "FourOAK":false, "FiveOAK":false, "Singles":false]
         if currentGame.numDice == 6 {
@@ -19,6 +18,7 @@ extension GameScene {
     }
 
     func rollDice() {
+        rolling = true
         if currentPlayer.firstRoll {
             dieSelected = true
             currentPlayer.firstRoll = false
@@ -39,6 +39,11 @@ extension GameScene {
         } else {
             selectScoringDieMessage(on: scene!, title: "Select a Scoring Die", message: GameConstants.Messages.NoScoringDieSelected)
         }
+        for die in currentDiceArray {
+            if die.selected {
+                print("dieName: \(die.name!)")
+            }
+        }
     }
 
     func getDieSides() {
@@ -46,11 +51,9 @@ extension GameScene {
         resetScoringCombosArray()
         dieFacesArray.removeAll()
         countDice(isComplete: handlerBlock)
-        //getScoringCombos(isComplete: handlerBlock)
     }
 
     func countDice(isComplete: (Bool) -> Void) {
-        //resetDieCount()
         rollDiceAction(isComplete: handlerBlock)
         var value = Int()
         for die in currentDiceArray {
@@ -171,67 +174,6 @@ extension GameScene {
         }
     }
 
-    /*
-    func getScoringCombos(isComplete: (Bool) -> Void) {
-        for die in currentDiceArray where die.selected {
-            let count = die.dieFace!.countThisRoll
-            switch count {
-            case 1:
-                if die.dieFace!.faceValue == 1 || die.dieFace!.faceValue == 5 {
-                    currentPlayer.hasScoringDice = true
-                    scoringCombosArray["Singles"] = true
-                    scoreDice(key: "Singles", isComplete: handlerBlock)
-                }
-            case 2:
-                if die.dieFace!.faceValue == 1 || die.dieFace!.faceValue == 5 {
-                    currentPlayer.hasScoringDice = true
-                    scoringCombosArray["Singles"] = true
-                    scoreDice(key: "Singles", isComplete: handlerBlock)
-                }
-                pairs += 1
-            case 3:
-                scoringCombosArray["ThreeOAK"] = true
-                if pairs == 1 {
-                    scoringCombosArray["FullHouse"] = true
-                    scoringCombosArray["ThreeOAK"] = false
-                    pairs = 0
-                    scoreDice(key: "FullHouse", isComplete: handlerBlock)
-                } else {
-                    scoreDice(key: "ThreeOAK", isComplete: handlerBlock)
-                    die.dieFace!.countThisRoll = 0
-                }
-                currentPlayer.hasScoringDice = true
-            case 4:
-                scoringCombosArray["FourOAK"] = true
-                currentPlayer.hasScoringDice = true
-                scoreDice(key: "FourOAK", isComplete: handlerBlock)
-                die.dieFace!.countThisRoll = 0
-            case 5:
-                scoringCombosArray["FiveOAK"] = true
-                currentPlayer.hasScoringDice = true
-                scoreDice(key: "FiveOAK", isComplete: handlerBlock)
-                die.dieFace!.countThisRoll = 0
-            case 6:
-                scoringCombosArray["SixOAK"] = true
-                currentPlayer.hasScoringDice = true
-                scoreDice(key: "SixOAK", isComplete: handlerBlock)
-                die.dieFace!.countThisRoll = 0
-            default:
-                break
-            }
-        }
-        if pairs == 3 {
-            scoringCombosArray["ThreeOAK"] = true
-            pairs = 0
-            currentPlayer.hasScoringDice = true
-            scoreDice(key: "ThreePair", isComplete: handlerBlock)
-        }
-
-        currentDiceArray.removeAll(where: { $0.selected })
-        isComplete(true)
-    }
-    */
-
     func scoreDice(key: String, isComplete: (Bool) -> Void) {
         switch key {
         case "FullHouse":
@@ -274,9 +216,9 @@ extension GameScene {
 
     func displayScore() {
         currentPlayer.currentRollScore += currentScore
-        currentRollScoreLabel.text = String(currentPlayer.currentRollScore)
+        score = currentPlayer.currentRollScore
+        //currentRollScoreLabel.text = String(currentPlayer.currentRollScore)
         currentScore = 0
-        previousRollScore = currentPlayer.currentRollScore
     }
 
     func moveSelectedDice(count: Int, isComplete: (Bool) -> Void) {

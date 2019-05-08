@@ -26,12 +26,12 @@ struct GameConstants {
         
         static let BackGroundName = "BackGround"
         static let GameTableName = "GameTable"
-        static let IconWindowName = "IconWindow"
+        static let ButtonWindowName = "ButtonWindow"
         static let ScoresWindowName = "ScoresWindow"
         static let MainMenuName = "MainMenu"
         static let SettingsMenuName = "SettingsMenu"
 
-        static let IconWindowImageName = "WindowPopup1"
+        static let buttonWindowImageName = "WindowPopup1"
         static let ScoresWindowImageName = "WindowPopup2"
         static let GameTableImageName = "WindowPopup"
         static let MainMenuImageName = "MainMenu"
@@ -54,7 +54,7 @@ struct GameConstants {
         static let MainMenu = SKTexture(imageNamed: "MainMenu")
         static let SettingsMenu = SKTexture(imageNamed: "SettingsMenu")
         static let GameTable = SKTexture(imageNamed: "WindowPopup")
-        static let IconWindow = SKTexture(imageNamed: "WindowPopup1")
+        static let ButtonWindow = SKTexture(imageNamed: "WindowPopup1")
         static let ScoresWindow = SKTexture(imageNamed: "WindowPopup2")
         static let BackGround = SKTexture(imageNamed: "Felt_Green")
     }
@@ -67,7 +67,7 @@ struct GameConstants {
         static let ScoresMenu = CGSize(width: 150, height: 330)
         static let ScoresMenuFont = CGFloat(34)
         static let MainMenuFont = CGFloat(34)
-        static let IconLabelFont = CGFloat(18)
+        static let ButtonLabelFont = CGFloat(18)
         static let Dice = CGSize(width: 48, height: 48)
     }
     
@@ -77,7 +77,7 @@ struct GameConstants {
         static let PlayerScoreLabelFont = UIColor.darkText
         static let ScoresMenuFont = UIColor.darkText
         static let MainMenuFont = UIColor.darkText
-        static let IconLabelFont = UIColor.darkText
+        static let ButtonLabelFont = UIColor.darkText
     }
 
     struct ZPositions {
@@ -85,8 +85,8 @@ struct GameConstants {
         static let GameTable: CGFloat = 10
         static let Window: CGFloat = 10
         static let Logo: CGFloat = 15
-        static let Icon: CGFloat = 20
-        static let IconLabel: CGFloat = 20
+        static let Button: CGFloat = 20
+        static let ButtonLabel: CGFloat = 20
         static let NameLabel: CGFloat = 20
         static let ScoreLabel:  CGFloat = 20
         static let Dice: CGFloat = 30
