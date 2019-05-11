@@ -8,22 +8,16 @@
 
 import SpriteKit
 
-class Player {
-    let nameLabel: SKLabelNode = SKLabelNode()
-    var name: String
+struct Player {
+    var name: String = ""
+    var score: Int = Int()
+    var scoreLabel: SKLabelNode = SKLabelNode(fontNamed: "Marker Felt Wide")
+    var nameLabel: SKLabelNode
 
-    var score: Int
-    var currentRollScore: Int
-    var scoreLabel: SKLabelNode = SKLabelNode()
-    var hasScoringDice: Bool
-    var firstRoll: Bool = true
-    
-    init(name: String, score: Int, currentRollScore: Int, hasScoringDice: Bool)
-    {
+    init(name: String, score: Int, nameLabel: SKLabelNode) {
         self.name = name
         self.score = score
-        self.currentRollScore = currentRollScore
-        self.hasScoringDice = hasScoringDice
+        self.nameLabel = nameLabel
     }
 }
 

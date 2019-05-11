@@ -11,6 +11,7 @@ import SpriteKit
 extension GameScene {
 
     func setupPlayers() {
+        playerNameLabel = SKLabelNode(fontNamed: "Marker Felt.wide")
         player1.name = "Player 1"
         player2.name = "Player 2"
         player3.name = "Player 3"
@@ -20,7 +21,8 @@ extension GameScene {
         player2.nameLabel.text = player2.name
         player3.nameLabel.text = player3.name
         player4.nameLabel.text = player4.name
-        
+
+        print("number of players: \(currentGame.numPlayers!)")
         switch currentGame.numPlayers {
         case 1:
             playersArray = [player1]
@@ -33,18 +35,17 @@ extension GameScene {
         default:
             break
         }
-        currentPlayer = playersArray.first
+        currentPlayer = playersArray.first!
         positionPlayerLabels()
     }
-    
 
     func positionPlayerLabels() {
         for player in playersArray {
-            player.scoreLabel.zPosition = 30
-            player.scoreLabel.fontName = GameConstants.StringConstants.FontName
+            player.scoreLabel.fontName =
+                "Markder Felt Wide"
             player.scoreLabel.fontSize = GameConstants.Sizes.PlayerScoreLabelFont
-            player.scoreLabel.fontColor = GameConstants.Colors.PlayerScoreLabelFont
-            player.scoreLabel.zPosition = GameConstants.ZPositions.ScoreLabel
+            player.scoreLabel.fontColor = maroonFontColor
+            player.scoreLabel.zPosition = scoresWindow.zPosition + 100
             
             switch player.name {
             case "Player 1":

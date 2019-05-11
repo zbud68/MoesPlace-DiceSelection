@@ -42,6 +42,7 @@ extension GameScene {
             alert.dismiss(animated: true, completion: nil) }))
         
         scene.view?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+         exit(0)
     }
     
     func farkleMessage(on scene: SKScene, title: String, message: String) {

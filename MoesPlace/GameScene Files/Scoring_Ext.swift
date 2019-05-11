@@ -9,43 +9,6 @@
 import SpriteKit
 
 extension GameScene {
-    func setupScoringCombosArray() {
-        scoringCombosArray = ["Straight":false, "FullHouse":false, "ThreeOAK":false, "FourOAK":false, "FiveOAK":false, "Singles":false]
-        if currentGame.numDice == 6 {
-            scoringCombosArray["ThreePair"] = false
-            scoringCombosArray["SixOAK"] = false
-        }
-    }
-
-    func rollDice() {
-        rolling = true
-        if currentPlayer.firstRoll {
-            dieSelected = true
-            currentPlayer.firstRoll = false
-        }
-        if dieSelected {
-            resetDieCount()
-            pairs = 0
-            currentScore = 0
-            currentPlayer.hasScoringDice = false
-            resetDiePhysics()
-            if currentDiceArray.isEmpty {
-                startNewRoll()
-            }
-            getDieSides()
-            displayScore()
-            currentPlayer.firstRoll = false
-            dieSelected = false
-        } else {
-            selectScoringDieMessage(on: scene!, title: "Select a Scoring Die", message: GameConstants.Messages.NoScoringDieSelected)
-        }
-        for die in currentDiceArray {
-            if die.selected {
-                print("dieName: \(die.name!)")
-            }
-        }
-    }
-
     func getDieSides() {
         resetDieVariables()
         resetScoringCombosArray()
@@ -88,7 +51,7 @@ extension GameScene {
                 die.dieFace!.countThisRoll = 0
             }
             if die.dieFace!.faceValue == 1 || die.dieFace!.faceValue == 5 {
-                currentPlayer.hasScoringDice = true
+                hasScoringDice = true
             }
         }
         print("pairs: \(pairs)")
@@ -103,17 +66,17 @@ extension GameScene {
         dieFacesArray = dieFacesArray.sorted()
         if dieFacesArray == [1,2,3,4,5] {
             scoringCombosArray["Straight"] = true
-            currentPlayer.hasScoringDice = true
+            hasScoringDice = true
             dieFacesArray.removeAll()
             scoreDice(key: "Straight", isComplete: handlerBlock)
         } else if dieFacesArray == [2,3,4,5,6] {
             scoringCombosArray["Straight"] = true
-            currentPlayer.hasScoringDice = true
+            hasScoringDice = true
             dieFacesArray.removeAll()
             scoreDice(key: "Straight", isComplete: handlerBlock)
         } else if dieFacesArray == [1,2,3,4,5,6] {
             scoringCombosArray["Straight"] = true
-            currentPlayer.hasScoringDice = true
+            hasScoringDice = true
             dieFacesArray.removeAll()
             scoreDice(key: "Straight", isComplete: handlerBlock)
         } else {
@@ -133,7 +96,7 @@ extension GameScene {
                 print("currentDiceArray: \(die.dieFace!.faceValue)")
             }
             scoringCombosArray["Straight"] = true
-            currentPlayer.hasScoringDice = true
+            hasScoringDice = true
             dieFacesArray.removeAll()
             scoreDice(key: "Straight", isComplete: handlerBlock)
         }
@@ -201,7 +164,7 @@ extension GameScene {
         case "SixOAK":
             currentScore = calcMultiDieScore(count: 6)
         case "Singles":
-            if currentPlayer.hasScoringDice {
+            if hasScoringDice {
                 currentScore = calcSingleDice()
             }
         default:
@@ -215,44 +178,49 @@ extension GameScene {
     }
 
     func displayScore() {
-        currentPlayer.currentRollScore += currentScore
-        score = currentPlayer.currentRollScore
-        //currentRollScoreLabel.text = String(currentPlayer.currentRollScore)
-        currentScore = 0
+        currentRollScore += currentScore
+        score = currentRollScore
+        //currentScore = 0
     }
 
     func moveSelectedDice(count: Int, isComplete: (Bool) -> Void) {
         print("count: \(count)")
         if count >= 3 {
             for die in currentDiceArray where die.dieFace!.countThisRoll == count {
-                die.selected = true
-                die.counted = true
+                //die.selected = true
+                //die.counted = true
                 die.zRotation = 0
+                die.physicsBody = nil
+                die.zPosition = GameConstants.ZPositions.GameTable + 5
+                die.position = getFirstPlaceHolderPosiition()
+                /*
                 die.physicsBody?.collisionBitMask = 2
                 die.physicsBody?.isDynamic = false
                 die.physicsBody?.allowsRotation = false
-                die.zPosition = GameConstants.ZPositions.Dice
-                die.position = getFirstPlaceHolderPosition()
+                die.zPosition = GameConstants.ZPositions.GameTable + 5
+                die.position = getFirstPlaceHolderPosiition()
+                */
             }
             resetDiePhysics()
-            currentDiceArray.removeAll(where: { $0.selected })
+            //currentDiceArray.removeAll(where: { $0.selected })
         }
         isComplete(true)
     }
 
-    func getFirstPlaceHolderPosition() -> CGPoint {
-        var firstPlaceHolderPosition = CGPoint()
-        if placeHoldersArray.first != nil {
-            firstPlaceHolderPosition = placeHoldersArray.first!.position
-        } else {
-            resetPlaceHoldersArray()
-            firstPlaceHolderPosition = placeHoldersArray.first!.position
-        }
-        placeHoldersArray.removeFirst()
-        return firstPlaceHolderPosition
-    }
+    func getFirstPlaceHolderPosiition() -> (CGPoint) {
+        var nextPosition = CGPoint()
 
-    func calcMultiDieScore(count: Int) -> Int {
+        if placeHolderIndex >= numDice {
+            resetPlaceHoldersArray()
+            nextPosition = placeHoldersArray[placeHolderIndex].position
+        } else {
+            nextPosition = placeHoldersArray[placeHolderIndex].position
+        }
+        placeHolderIndex += 1
+        return (nextPosition)
+   }
+
+   func calcMultiDieScore(count: Int) -> Int {
         var result = 0
         for die in selectedDieArray where die.dieFace!.countThisRoll == count {
             if die.dieFace!.faceValue == 1 {
@@ -278,107 +246,5 @@ extension GameScene {
             die.dieFace!.countThisRoll = 0
         }
         return result
-    }
-
-    func runFarkleAction(isComplete: (Bool) -> Void) {
-        let wait = SKAction.wait(forDuration: 1)
-        let fadeOut = SKAction.fadeOut(withDuration: 0.20)
-        let changeColorToRed = SKAction.run {
-            self.logo.zPosition = GameConstants.ZPositions.Dice + 0.5
-            self.logo.fontColor = UIColor.red
-            self.logo2.zPosition = self.logo.zPosition
-            self.logo2.fontColor = UIColor.red
-        }
-        let changeColorBack = SKAction.run {
-            self.logo.zPosition = GameConstants.ZPositions.Logo
-            self.logo.fontColor = GameConstants.Colors.LogoFont
-            self.logo2.fontColor = GameConstants.Colors.LogoFont
-            self.logo2.zPosition = GameConstants.ZPositions.Logo
-        }
-
-        let moveDie1 = SKAction.move(to: getFirstPlaceHolderPosition(), duration: 0.1)
-        let moveDie2 = SKAction.move(to: getFirstPlaceHolderPosition(), duration: 0.1)
-        let moveDie3 = SKAction.move(to: getFirstPlaceHolderPosition(), duration: 0.1)
-        let moveDie4 = SKAction.move(to: getFirstPlaceHolderPosition(), duration: 0.1)
-        let moveDie5 = SKAction.move(to: getFirstPlaceHolderPosition(), duration: 0.1)
-        let moveDie6 = SKAction.move(to: getFirstPlaceHolderPosition(), duration: 0.1)
-
-        let nextPlayer = SKAction.run {
-            self.nextPlayer()
-        }
-
-        let rotateDice = SKAction.run {
-            self.die1.zRotation = 0
-            self.die2.zRotation = 0
-            self.die3.zRotation = 0
-            self.die4.zRotation = 0
-            self.die5.zRotation = 0
-            self.die6.zRotation = 0
-            for die in self.currentDiceArray {
-                die.physicsBody?.allowsRotation = false
-            }
-        }
-
-        let moveDice1 = SKAction.run {
-            for die in self.currentDiceArray {
-                die.run(rotateDice)
-            }
-            self.die1.run(moveDie1)
-            self.die2.run(moveDie2)
-            self.die3.run(moveDie3)
-            self.die4.run(moveDie4)
-            self.die5.run(moveDie5)
-        }
-
-        let moveDice2 = SKAction.run {
-            self.die1.run(moveDie1)
-            self.die2.run(moveDie2)
-            self.die3.run(moveDie3)
-            self.die4.run(moveDie4)
-            self.die5.run(moveDie5)
-            self.die6.run(moveDie6)
-        }
-
-        let fadeIn = SKAction.fadeIn(withDuration: 0.20)
-        let fadeTo = SKAction.fadeAlpha(to: 0.65, duration: 0.20)
-
-        let seq1 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait, moveDice1, nextPlayer])
-
-        let seq2 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait, moveDice2, nextPlayer])
-
-        if currentGame.numDice == 5 {
-            logo.run(seq1)
-        } else {
-            logo.run(seq2)
-        }
-        resetDice()
-        resetPlaceHoldersArray()
-        isComplete(true)
-    }
-
-    func resetScoringCombosArray() {
-        for (key,_) in scoringCombosArray {
-            scoringCombosArray[key] = false
-        }
-    }
-
-    func resetDieCount() {
-        for die in currentDiceArray {
-            die.dieFace?.countThisRoll = 0
-        }
-        for die in selectedDieArray {
-            die.dieFace?.countThisRoll = 0
-        }
-    }
-
-    func resetDieVariables() {
-        for die in currentDiceArray {
-            die.selected = false
-            die.counted = false
-        }
-        for die in selectedDieArray {
-            die.selected = false
-            die.counted = false
-        }
     }
 }

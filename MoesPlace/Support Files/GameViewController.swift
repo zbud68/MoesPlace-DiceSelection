@@ -12,7 +12,6 @@ import UIKit
 class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = SKScene(fileNamed: "GameScene") {
@@ -29,6 +28,11 @@ class GameViewController: UIViewController {
             view.showsNodeCount = true
             view.showsPhysics = true
         }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
     }
     
     override var shouldAutorotate: Bool {

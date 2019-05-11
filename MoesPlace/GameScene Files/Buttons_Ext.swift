@@ -8,6 +8,15 @@
 import SpriteKit
 
 extension GameScene {
+    func setupButtonWindow() {
+        if let ButtonWindow = background.childNode(withName: "ButtonsWindow") as? SKSpriteNode {
+            buttonWindow = ButtonWindow
+        } else {
+            print("Button window not found")
+        }
+        setupButtonWindowButtons()
+    }
+
     func setupButtonWindowButtons() {
         if let PauseButton = buttonWindow.childNode(withName: "PauseButton") as? SKSpriteNode {
             pauseButton = PauseButton

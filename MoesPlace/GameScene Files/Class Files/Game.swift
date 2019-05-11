@@ -8,20 +8,22 @@
 
 import SpriteKit
 
-class Game {
-    var numDice = 5
-    var numPlayers = 2
-    var targetScore = 10000
-    var matchTargetScore = true
-    var numRounds = 1
-    
-    let defaults: Defaults = Defaults()
+struct Game {
+
+    var numDice: Int!
+    var numPlayers: Int!
+    var targetScore: Int!
+    var matchTargetScore: Bool!
+    var numRounds: Int!
+
+    init(numPlayers: Int, numDice: Int, targetScore: Int, matchTargetScore: Bool, numRounds: Int) {
+
+        self.numPlayers = numPlayers
+        self.numDice = numDice
+        self.targetScore = targetScore
+        self.matchTargetScore = matchTargetScore
+        self.numRounds = numRounds
+    }
 }
 
-struct Defaults {
-    let numDice: Int = Int(5)
-    let numPlayers: Int = Int(2)
-    let targetScore: Int = Int(10000)
-    let matchTargetScore: Bool = Bool(true)
-}
 

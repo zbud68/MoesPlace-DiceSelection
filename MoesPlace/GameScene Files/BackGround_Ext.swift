@@ -8,10 +8,4 @@
 import SpriteKit
 
 extension GameScene {
-    func setupBackGround() {
-
-        if let Background = self.childNode(withName: "Background") as? SKSpriteNode {
-            background = Background
-        }
-    }
 }
