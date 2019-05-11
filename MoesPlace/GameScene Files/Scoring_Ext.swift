@@ -207,16 +207,15 @@ extension GameScene {
         isComplete(true)
     }
 
+    //MARK: ********** Get First Place Holder Position **********
     func getFirstPlaceHolderPosiition() -> (CGPoint) {
         var nextPosition = CGPoint()
-
-        if placeHolderIndex >= numDice {
-            resetPlaceHoldersArray()
-            nextPosition = placeHoldersArray[placeHolderIndex].position
-        } else {
-            nextPosition = placeHoldersArray[placeHolderIndex].position
+        if currentIndexes.isEmpty {
+            currentIndexes = placeHolderIndexArray
         }
-        placeHolderIndex += 1
+        placeHolderIndex = currentIndexes[0]
+        nextPosition = placeHoldersArray[placeHolderIndex].position
+        currentIndexes.removeFirst()
         return (nextPosition)
    }
 

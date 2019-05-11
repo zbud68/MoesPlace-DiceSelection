@@ -71,12 +71,14 @@ extension GameScene {
                 numDice = 5
                 currentGame.numDice = 5
                 print("numDice: \(numDice)")
+                removeSixthDie()
                 //setupNewGame()
 
             case "SixDiceButton":
                 numDice = 6
                 currentGame.numDice = 6
                 print("numDice: \(numDice)")
+                addSixthDie()
                 //setupNewGame()
 
             case "MatchScoreOff":

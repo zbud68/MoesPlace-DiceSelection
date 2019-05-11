@@ -140,6 +140,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var placeHoldersArray: [SKSpriteNode] = [SKSpriteNode]()
     var currentPlaceHoldersArray: [SKSpriteNode] = [SKSpriteNode]()
+    var placeHolderIndexArray: [Int] = [Int]()
+    var currentIndexes: [Int] = [Int]()
     var placeHolderIndex = 0
 
     var diePosition1: CGPoint = CGPoint()

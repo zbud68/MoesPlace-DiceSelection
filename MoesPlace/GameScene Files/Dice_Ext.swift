@@ -38,20 +38,26 @@ extension GameScene {
         } else {
             print("die5PlayerHolder no found")
         }
-        if let Die6PlaceHolder = gameTable.childNode(withName: "Die6PlaceHolder") as? SKSpriteNode {
-            die6PlaceHolder = Die6PlaceHolder
-        } else {
-            print("die6PlayerHolder no found")
-        }
-        placeHoldersArray = [ die1PlaceHolder, die2PlaceHolder, die3PlaceHolder, die4PlaceHolder, die5PlaceHolder]
+        setupPlaceHoldersArray()
+    }
 
+    func setupPlaceHoldersArray() {
+        placeHoldersArray.removeAll()
         if numDice == 6 {
-            placeHoldersArray.append(die6PlaceHolder)
-        } else {
-            die6PlaceHolder.alpha = 0
-            die6PlaceHolder.physicsBody = nil
+            if let Die6PlaceHolder = gameTable.childNode(withName: "Die6PlaceHolder") as? SKSpriteNode {
+                die6PlaceHolder = Die6PlaceHolder
+            } else {
+                print("die6PlayerHolder not found")
+            }
+            die6PlaceHolder.position = CGPoint(x: -250, y: -119.249)
         }
+
+        placeHoldersArray = [ die1PlaceHolder, die2PlaceHolder, die3PlaceHolder, die4PlaceHolder, die5PlaceHolder, die6PlaceHolder]
         currentPlaceHoldersArray = placeHoldersArray
+        for (index, _) in placeHoldersArray.enumerated() {
+            placeHolderIndexArray.append(index)
+        }
+
         placeHolderIndex = 0
     }
 
@@ -88,9 +94,6 @@ extension GameScene {
             } else {
                 print("die6 not found")
             }
-        } else {
-            die6.alpha = 0
-            die6.physicsBody = nil
         }
 
         die1.texture = GameConstants.Textures.Die1
@@ -98,10 +101,6 @@ extension GameScene {
         die3.texture = GameConstants.Textures.Die3
         die4.texture = GameConstants.Textures.Die4
         die5.texture = GameConstants.Textures.Die5
-        if numDice == 6 {
-            die6.texture = GameConstants.Textures.Die6
-            die6.dieFace = dieFace6
-        }
 
         die1.dieFace = dieFace1
         die2.dieFace = dieFace2
@@ -110,11 +109,7 @@ extension GameScene {
         die5.dieFace = dieFace5
 
         diceArray = [die1, die2, die3, die4, die5]
-
-        if numDice == 6 {
-            diceArray.append(die6)
-        }
-        for die in diceArray {
+       for die in diceArray {
             die.zPosition = gameTable.zPosition + 5
         }
         currentDiceArray = diceArray
@@ -122,6 +117,7 @@ extension GameScene {
     }
 
     func positionDice() {
+        currentIndexes = placeHolderIndexArray
         for die in currentDiceArray {
             die.physicsBody = nil
             die.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
@@ -180,5 +176,37 @@ extension GameScene {
             }
         }
         gameState = .InProgress
+    }
+
+    func addSixthDie() {
+        if let Die6 = gameTable.childNode(withName: "Die6") as? Die {
+            die6 = Die6
+            die6.texture = GameConstants.Textures.Die6
+            die6.dieFace = dieFace6
+        } else {
+            print("die6 not found")
+        }
+        diceArray = [die1, die2, die3, die4, die5, die6]
+        currentDiceArray = diceArray
+        setupPlaceHoldersArray()
+        die6.position = die6PlaceHolder.position
+    }
+
+    func removeSixthDie() {
+        if numDice == 5 {
+            die6.position = GameConstants.Positions.Die6
+            die6PlaceHolder.position = GameConstants.Positions.Die6
+            placeHolderIndex = 0
+            placeHoldersArray.removeAll()
+        } else {
+            print("Only 5 dice available")
+        }
+        placeHoldersArray = [ die1PlaceHolder, die2PlaceHolder, die3PlaceHolder, die4PlaceHolder, die5PlaceHolder]
+        currentPlaceHoldersArray = placeHoldersArray
+        for (index, _) in placeHoldersArray.enumerated() {
+            placeHolderIndexArray.append(index)
+        }
+        currentIndexes = placeHolderIndexArray
+        placeHolderIndex = 0
     }
 }
