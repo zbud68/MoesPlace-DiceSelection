@@ -27,9 +27,7 @@ extension GameScene {
             let getDieSides = SKAction.run {
                 self.setDieSides(die: die)
             }
-
             let Group = SKAction.group([rollAction, MoveAction])
-
             let Seq = SKAction.sequence([Group, Wait, getDieSides])
 
             die.position = CGPoint(x: 0, y: 0)
@@ -110,7 +108,7 @@ extension GameScene {
         } else {
             logo.run(seq2)
         }
-        //resetDice()
+        // resetDice()
         isComplete(true)
     }
 }
