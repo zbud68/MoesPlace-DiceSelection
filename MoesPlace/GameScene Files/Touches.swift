@@ -87,6 +87,7 @@ extension GameScene {
                 matchScoreOffButton.position = CGPoint(x: 2000, y: 0)
                 matchScoreOnButton.position = matchScoreButtonPosition
                 matchTargetScore = true
+                currentGame.matchTargetScore =  matchTargetScore
                 //setupNewGame()
 
             case "MatchScoreOn":
@@ -95,14 +96,16 @@ extension GameScene {
                 matchScoreOnButton.position = CGPoint(x: 2000, y: 0)
                 matchScoreOffButton.position = matchScoreButtonPosition
                 matchTargetScore = false
+                currentGame.matchTargetScore = matchTargetScore
                 //setupNewGame()
 
             case "TargetScorePlus":
                 targetScore += 500
+                currentGame.targetScore = targetScore
 
             case "TargetScoreMinus":
                 targetScore -= 500
-                //setupNewGame()
+                currentGame.targetScore = targetScore
 
             case "NumPlayersPlus":
                 let maxNumPlayers = 4
@@ -111,6 +114,7 @@ extension GameScene {
                 } else {
                     print("Maximin Number of players is: \(maxNumPlayers)")
                 }
+                currentGame.numPlayers = numPlayers
                 //setupNewGame()
 
             case "NumPlayersMinus":
@@ -120,7 +124,7 @@ extension GameScene {
                 } else {
                     print("Minimun Number of players is: \(minNumPlayers)")
                 }
-
+                currentGame.numPlayers = numPlayers
                 //setupNewGame()
 
             default:
@@ -137,7 +141,7 @@ extension GameScene {
 
     func handleTouchedDie(TouchedNode: SKNode, touchedDie: Die) {
         dieSelected = true
-        //touchedDie.selected = true
+        touchedDie.selected = true
         let count = touchedDie.dieFace!.countThisRoll
         if count >= 3 {
             for die in currentDiceArray where die.dieFace!.countThisRoll == count {

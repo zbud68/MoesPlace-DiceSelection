@@ -272,7 +272,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: ********** didMove Section **********
     override func didMove(to view: SKView) {
         getSettings()
-
         gameSetup(isComplete: handlerBlock)
     }
 
@@ -331,6 +330,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func nextPlayer() {
+        print("next Player")
         currentRollScore = 0
         if currentPlayerID < playersArray.count - 1 {
             currentPlayerID += 1
@@ -344,6 +344,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func startNewRoll() {
+        print("starting new roll")
         resetPlaceHoldersArray()
         resetDice()
         resetDieVariables()
@@ -353,7 +354,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func startNewRound() {
-        currentPlayerID = 0
+        //currentPlayerID = 0
         resetDice()
         resetCurrentRollVariables()
         currentGame.numRounds += 1

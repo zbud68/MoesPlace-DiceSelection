@@ -108,7 +108,7 @@ extension GameScene {
         } else {
             logo.run(seq2)
         }
-        // resetDice()
+        positionDice()
         isComplete(true)
     }
 }

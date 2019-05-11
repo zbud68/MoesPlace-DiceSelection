@@ -118,7 +118,8 @@ struct GameConstants {
 
     struct Positions {
         static let MainMenu = CGPoint(x: 500, y: 0)
-        static let Die6 = CGPoint(x: -1169.078, y: -133.944)
+        static let Die6OffScreen = CGPoint(x: -1170, y: -134)
+        static let Die6PlaceHolder = CGPoint(x: -250, y: -118)
     }
     
 }
