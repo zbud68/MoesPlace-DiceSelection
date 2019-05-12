@@ -54,21 +54,23 @@ extension GameScene {
     }
 
     func backButtonTouched() {
+        resetGameSettings()
         hideMenu(menu: helpMenu)
         hideMenu(menu: settingsMenu)
         showMenu(menu: mainMenu)
-                                                                                             }
+    }
 
     func pauseButtonTouched() {
         showMenu(menu: mainMenu)
     }
 
     func keepScoreButtonTouched() {
-        if currentScore == 0 {
+        if dieSelected == false {
             selectScoringDieMessage(on: scene!, title: "Select a Scoring Die", message: GameConstants.Messages.NoScoringDieSelected)
+        } else {
+            displayPlayerScore(playerName: currentPlayer.name)
+            dieSelected = false
         }
-        displayPlayerScore(playerName: currentPlayer.name)
-        prepareForNextPlayer()
         nextPlayer()
     }
 }

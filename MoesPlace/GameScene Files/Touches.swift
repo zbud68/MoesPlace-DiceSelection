@@ -70,34 +70,30 @@ extension GameScene {
             case "FiveDiceButton":
                 numDice = 5
                 currentGame.numDice = 5
-                print("numDice: \(numDice)")
+                fiveDiceButton.texture = SKTexture(imageNamed: "Die5Selected")
+                sixDiceButton.texture = SKTexture(imageNamed: "Die6")
                 removeSixthDie()
-                //setupNewGame()
 
             case "SixDiceButton":
                 numDice = 6
                 currentGame.numDice = 6
-                print("numDice: \(numDice)")
+                fiveDiceButton.texture = SKTexture(imageNamed: "Die5")
+                sixDiceButton.texture = SKTexture(imageNamed: "Die6Selected")
                 addSixthDie()
-                //setupNewGame()
 
             case "MatchScoreOff":
-                print("match score off touched")
                 matchScoreOnButton.zPosition = matchScoreOffButton.zPosition
                 matchScoreOffButton.position = CGPoint(x: 2000, y: 0)
                 matchScoreOnButton.position = matchScoreButtonPosition
                 matchTargetScore = true
                 currentGame.matchTargetScore =  matchTargetScore
-                //setupNewGame()
 
             case "MatchScoreOn":
-                print("match score on touched")
                 matchScoreOffButton.zPosition = matchScoreOnButton.zPosition
                 matchScoreOnButton.position = CGPoint(x: 2000, y: 0)
                 matchScoreOffButton.position = matchScoreButtonPosition
                 matchTargetScore = false
                 currentGame.matchTargetScore = matchTargetScore
-                //setupNewGame()
 
             case "TargetScorePlus":
                 targetScore += 500
@@ -115,7 +111,6 @@ extension GameScene {
                     print("Maximin Number of players is: \(maxNumPlayers)")
                 }
                 currentGame.numPlayers = numPlayers
-                //setupNewGame()
 
             case "NumPlayersMinus":
                 let minNumPlayers = 1
@@ -125,7 +120,6 @@ extension GameScene {
                     print("Minimun Number of players is: \(minNumPlayers)")
                 }
                 currentGame.numPlayers = numPlayers
-                //setupNewGame()
 
             default:
                 break
@@ -143,8 +137,10 @@ extension GameScene {
         dieSelected = true
         touchedDie.selected = true
         let count = touchedDie.dieFace!.countThisRoll
+        let value = touchedDie.dieFace!.faceValue
         if count >= 3 {
-            for die in currentDiceArray where die.dieFace!.countThisRoll == count {
+            for die in currentDiceArray where die.dieFace!.countThisRoll == count && die.dieFace!.faceValue == value{
+                dieSelected = true
                 die.selected = true
                 hasScoringDice = true
                 selectedDieArray.append(die)
@@ -176,13 +172,12 @@ extension GameScene {
             selectedDieArray.append(touchedDie)
         } else {
             selectScoringDieMessage(on: scene!, title: "Select a Scoring Die", message: GameConstants.Messages.NoScoringDieSelected)
+            touchedDie.selected = false
         }
-        for (key,value) in scoringCombosArray {
+        for (key,_) in scoringCombosArray {
             if scoringCombosArray[key] == true {
                 scoreDice(key: key, isComplete: handlerBlock)
-                print(key)
             }
-            print(key,value)
         }
         resetDiePhysics()
         currentDiceArray.removeAll(where: { $0.selected })

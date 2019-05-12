@@ -29,7 +29,6 @@
 		4DD8E6AE2283F9CE00C41543 /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD8E6AD2283F9CE00C41543 /* Actions.swift */; };
 		4DD8E6B02283FA9B00C41543 /* Touches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD8E6AF2283FA9B00C41543 /* Touches.swift */; };
 		4DD8E6B42283FF2600C41543 /* GameSceneSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD8E6B32283FF2600C41543 /* GameSceneSetup.swift */; };
-		4DD8E6B62287483600C41543 /* PlaceHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD8E6B52287483600C41543 /* PlaceHolder.swift */; };
 		4DE4A2362211D8EA00671D07 /* Buttons_Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4A2352211D8EA00671D07 /* Buttons_Ext.swift */; };
 		4DE4A2382211D96D00671D07 /* Dice_Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4A2372211D96D00671D07 /* Dice_Ext.swift */; };
 		4DFDFC6C222063D000439E67 /* Die.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFDFC6B222063D000439E67 /* Die.swift */; };
@@ -59,7 +58,6 @@
 		4DD8E6AD2283F9CE00C41543 /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
 		4DD8E6AF2283FA9B00C41543 /* Touches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Touches.swift; sourceTree = "<group>"; };
 		4DD8E6B32283FF2600C41543 /* GameSceneSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneSetup.swift; sourceTree = "<group>"; };
-		4DD8E6B52287483600C41543 /* PlaceHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceHolder.swift; sourceTree = "<group>"; };
 		4DE4A2352211D8EA00671D07 /* Buttons_Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons_Ext.swift; sourceTree = "<group>"; };
 		4DE4A2372211D96D00671D07 /* Dice_Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dice_Ext.swift; sourceTree = "<group>"; };
 		4DFDFC6B222063D000439E67 /* Die.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Die.swift; sourceTree = "<group>"; };
@@ -82,7 +80,6 @@
 				4D10179A2213A9170060FBA2 /* Player.swift */,
 				4DA971762215E2E500CEB115 /* Game.swift */,
 				4DFDFC6B222063D000439E67 /* Die.swift */,
-				4DD8E6B52287483600C41543 /* PlaceHolder.swift */,
 			);
 			path = "Class Files";
 			sourceTree = "<group>";
@@ -255,7 +252,6 @@
 				4D9394ED2216A99D00E12EFC /* Player_Ext.swift in Sources */,
 				4DD8E6AE2283F9CE00C41543 /* Actions.swift in Sources */,
 				4D6396A5220165CB004B6718 /* GameScene.swift in Sources */,
-				4DD8E6B62287483600C41543 /* PlaceHolder.swift in Sources */,
 				4D9A6548227CA30C009FFD9F /* Scoring_Ext.swift in Sources */,
 				4DD8E6B02283FA9B00C41543 /* Touches.swift in Sources */,
 				4DE4A2382211D96D00671D07 /* Dice_Ext.swift in Sources */,

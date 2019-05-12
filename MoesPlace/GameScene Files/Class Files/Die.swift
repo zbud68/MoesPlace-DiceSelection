@@ -13,7 +13,6 @@ class Die: SKSpriteNode {
     var selectable: Bool = true
     var counted: Bool = false
     var dieFace: DieFace?
-    var placeHolder: SKSpriteNode = SKSpriteNode()
 }
 
 class DieFace {

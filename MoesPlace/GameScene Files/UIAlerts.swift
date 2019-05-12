@@ -45,13 +45,14 @@ extension GameScene {
          exit(0)
     }
     
-    func farkleMessage(on scene: SKScene, title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    func farkleMessage() {
+        //(on scene: SKScene, title: String, message: String) {
+        let alert = UIAlertController(title: "Farkle", message: "You got a Farkle\n Next Player", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
             alert.dismiss(animated: true, completion: nil) }))
         
-        scene.view?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+        scene?.view?.window?.rootViewController?.present(alert, animated: true, completion: nil)
     }
 
     func settingsMessage(on scene: SKScene, title: String, message: String) {
@@ -80,7 +81,6 @@ extension GameScene {
 
         scene.view?.window?.rootViewController?.present(alert, animated: true, completion: nil)
     }
-
 
 }
 

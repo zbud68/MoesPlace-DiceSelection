@@ -22,7 +22,6 @@ extension GameScene {
         player3.nameLabel.text = player3.name
         player4.nameLabel.text = player4.name
 
-        print("number of players: \(currentGame.numPlayers!)")
         switch currentGame.numPlayers {
         case 1:
             playersArray = [player1]

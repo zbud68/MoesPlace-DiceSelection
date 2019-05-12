@@ -9,8 +9,6 @@
 import SpriteKit
 import UIKit
 
-//let gameVC: GameViewController = GameViewController()
-
 // MARK: ********** Global Variables Section **********
 enum GameState {
     case NewGame, Rolling, InProgress, NewRound, GameOver
@@ -23,8 +21,8 @@ let handlerBlock: (Bool) -> Void = {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
+
     var currentPlayerNameLabel: SKLabelNode!
-    var currentPlayerScoreLabel: SKLabelNode!
     var currentPlayerName = String() {
 
         didSet {
@@ -33,38 +31,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    var currentPlayerscoreLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
+    var currentPlayerScoreLabel: SKLabelNode!
     var score = 0 {
         didSet {
-            currentPlayerScoreLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
-            currentPlayerScoreLabel.text = "\(score)"
+            currentPlayerScoreLabel.text = "\(currentPlayer.name):  \(score)"
         }
     }
 
-    var numPlayersLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
-    var currentNumPlayers = Int()
+    var numPlayersLabel: SKLabelNode!
     var numPlayers = 2 {
         didSet {
-            currentNumPlayers = numPlayers
-            numPlayersLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
             numPlayersLabel.text = "Number of Players: \(numPlayers)"
-            print("numPlayers: \(numPlayers), currentNumPlayers: \(currentNumPlayers)")
-
-        }
-    }
-
-    var numDiceLabel: SKLabelNode!
-    var numDice = 5 {
-        didSet {
-            numDiceLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
-            numDiceLabel.text = "Number of Dice:  \(numDice)"
         }
     }
 
     var targetScoreLabel: SKLabelNode!
     var targetScore = 10000 {
         didSet {
-            targetScoreLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
             targetScoreLabel.text = "Target Score: \(targetScore)"
         }
     }
@@ -82,7 +65,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: ********** Game Variables **********
     var currentGame: Game!
 
-    var rolling = false
     var gameState = GameState.NewGame {
         willSet {
             switch newValue {
@@ -90,7 +72,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 print("New Game Started")
             case .Rolling:
                 print("Current Player Rolling the Dice")
-                rolling = true
                 rollDice()
             case .InProgress:
                 print("Game in Progress")
@@ -120,6 +101,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: ********** Dice Variables **********
     let maxNumDice = 6
     let minNumDice = 5
+    var numDice = 5
 
     var die1: Die = Die()
     var die2: Die = Die()
@@ -143,6 +125,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var placeHolderIndexArray: [Int] = [Int]()
     var currentIndexes: [Int] = [Int]()
     var placeHolderIndex = 0
+    var placeHolderPositionsArray: [CGPoint] = [CGPoint]()
 
     var diePosition1: CGPoint = CGPoint()
     var diePosition2: CGPoint = CGPoint()
@@ -185,6 +168,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var sixOAK = false
     var singles = false
     var pairs = 0
+
+     var farkle = false
 
     var scoringCombosArray = [String:Bool]()
     var currentRollScoreLabel: SKLabelNode = SKLabelNode()
@@ -276,13 +261,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func getSettings() {
-        let numPlayers = 3
-        let numDice = 6
-        let targetScore = 1000
-        let matchTargetScore = false
-        let targetScoreLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
-        targetScoreLabel.text = "Target Score: \(targetScore)"
-
         currentGame = Game(numPlayers: numPlayers, numDice: numDice, targetScore: targetScore, matchTargetScore: matchTargetScore, numRounds: numRounds)
         currentPlayer = Player(name: "Player 1", score: 0, nameLabel: SKLabelNode(fontNamed: "Marker Felt Wide"))
     }
@@ -316,35 +294,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         menuArray = [mainMenu, settingsMenu, helpMenu]
     }
 
-    func prepareForNextPlayer() {
-        currentDiceArray = diceArray
-        for die in currentDiceArray {
-            die.selected = false
-        }
-        resetPlaceHoldersArray()
-        resetCurrentScoreVariables()
-        resetDice()
-        resetDieVariables()
-        resetArrays()
-        positionDice()
-    }
-
     func nextPlayer() {
+        resetForNextPlayer()
         print("next Player")
-        currentRollScore = 0
         if currentPlayerID < playersArray.count - 1 {
             currentPlayerID += 1
         } else {
             currentPlayerID = 0
         }
         currentPlayer = playersArray[currentPlayerID]
-        firstRoll = true
-        hasScoringDice = false
         playerNameLabel.text = "\(currentPlayer!.name):"
     }
 
     func startNewRoll() {
-        print("starting new roll")
+        print("\nstarting new roll\n")
         resetPlaceHoldersArray()
         resetDice()
         resetDieVariables()
@@ -354,11 +317,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func startNewRound() {
-        //currentPlayerID = 0
+        print("\nstarting new round\n")
         resetDice()
         resetCurrentRollVariables()
         currentGame.numRounds += 1
         firstRoll = true
+        hasScoringDice = false
     }
 
    // MARK: ********** Updates Section **********

@@ -11,18 +11,19 @@ import SpriteKit
 extension GameScene {
     func setupNewGame() {
         gameState = .NewGame
-        resetDice()
         resetCurrentScoreVariables()
         resetArrays()
         resetScoringCombosArray()
         resetDiePhysics()
         resetDieVariables()
+        resetGameSettings()
+        resetPlaceHoldersArray()
     }
 
     func displayPlayerScore(playerName: String) {
         currentRollScore += currentScore
         score = currentRollScore
-        
+
         switch playerName {
         case "Player 1":
             player1.score += score
@@ -126,7 +127,6 @@ extension GameScene {
         currentPlayerNameLabel.fontSize = 22
         currentPlayerNameLabel.fontColor = maroonFontColor
         currentPlayerNameLabel.alpha = 0.65
-        currentPlayerNameLabel.text = "\(currentPlayer.name): "
         currentPlayerNameLabel.horizontalAlignmentMode = .right
         currentPlayerNameLabel.position = CGPoint(x: 0, y: (gameTable.frame.midY + (gameTable.size.height / 4)))
 
@@ -138,7 +138,6 @@ extension GameScene {
         currentPlayerScoreLabel.alpha = 0.65
         currentPlayerScoreLabel.horizontalAlignmentMode = .left
         currentPlayerScoreLabel.position = CGPoint(x: 10, y: currentPlayerNameLabel.position.y)
-            //CGPoint(x: currentPlayerNameLabel.position.x + (currentPlayerNameLabel.position.x + 11), y: (gameTable.frame.midY + (gameTable.size.height / 4)))
 
         gameTable.addChild(currentPlayerNameLabel)
         gameTable.addChild(currentPlayerScoreLabel)
@@ -273,7 +272,8 @@ extension GameScene {
         backButtonLabel.zPosition = GameConstants.ZPositions.ButtonLabel
         backButtonLabel.position = CGPoint(x: 59, y: -8)
 
-        numPlayersLabel.text = "Number of Players: \(numPlayers)"
+        numPlayersLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
+        numPlayersLabel.text = "Number of Players:  \(numPlayers)"
         numPlayersLabel.fontSize = 12
         numPlayersLabel.fontColor = maroonFontColor
         numPlayersLabel.horizontalAlignmentMode = .center
@@ -282,8 +282,8 @@ extension GameScene {
         numPlayersLabel.zPosition = 50
 
         targetScoreLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
-        //targetScoreLabel.text = "Target Score:  \(targetScore)"
-        targetScoreLabel.fontSize = 22
+        targetScoreLabel.text = "Target Score: \(targetScore)"
+        targetScoreLabel.fontSize = 12
         targetScoreLabel.fontColor = maroonFontColor
         targetScoreLabel.horizontalAlignmentMode = .center
         targetScoreLabel.verticalAlignmentMode = .center

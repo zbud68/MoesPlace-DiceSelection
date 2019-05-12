@@ -39,6 +39,7 @@ extension GameScene {
             print("die5PlayerHolder no found")
         }
         setupPlaceHoldersArray()
+        setupPlaceHolderPositionsArray()
     }
 
     func setupPlaceHoldersArray() {
@@ -49,17 +50,23 @@ extension GameScene {
             } else {
                 print("die6PlayerHolder not found")
             }
-            die6PlaceHolder.position = CGPoint(x: -250, y: -119.249)
+            die6PlaceHolder.position = CGPoint(x: -250, y: -120)
         }
         placeHoldersArray = [ die1PlaceHolder, die2PlaceHolder, die3PlaceHolder, die4PlaceHolder, die5PlaceHolder]
         if numDice == 6 {
             placeHoldersArray.append(die6PlaceHolder)
         }
-        currentPlaceHoldersArray = placeHoldersArray
         for (index, _) in placeHoldersArray.enumerated() {
             placeHolderIndexArray.append(index)
         }
+        currentPlaceHoldersArray = placeHoldersArray
         placeHolderIndex = 0
+    }
+
+    func setupPlaceHolderPositionsArray() {
+        for placeHolder in currentPlaceHoldersArray {
+            placeHolderPositionsArray.append(placeHolder.position)
+        }
     }
 
     func setupDice() {
@@ -110,7 +117,7 @@ extension GameScene {
         die5.dieFace = dieFace5
 
         diceArray = [die1, die2, die3, die4, die5]
-       for die in diceArray {
+        for die in diceArray {
             die.zPosition = gameTable.zPosition + 5
         }
         currentDiceArray = diceArray
@@ -118,19 +125,7 @@ extension GameScene {
     }
 
     func positionDice() {
-        if numDice == 5 {
-            placeHoldersArray = [ die1PlaceHolder, die2PlaceHolder, die3PlaceHolder, die4PlaceHolder, die5PlaceHolder]
-        } else {
-            placeHoldersArray = [ die1PlaceHolder, die2PlaceHolder, die3PlaceHolder, die4PlaceHolder, die5PlaceHolder, die6PlaceHolder]
-        }
-        currentPlaceHoldersArray = placeHoldersArray
-        placeHolderIndexArray.removeAll()
-        for (index, _) in placeHoldersArray.enumerated() {
-            placeHolderIndexArray.append(index)
-        }
-        currentIndexes = placeHolderIndexArray
-        placeHolderIndex = 0
-
+        resetPlaceHoldersArray()
         for die in currentDiceArray {
             die.physicsBody = nil
             die.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
@@ -162,38 +157,52 @@ extension GameScene {
     }
 
     func rollDice() {
-        rolling = true
-        if firstRoll {
-            dieSelected = true
-            firstRoll = false
-        }
-        if dieSelected {
-            resetDieCount()
-            pairs = 0
-            currentScore = 0
-            hasScoringDice = false
-            resetDiePhysics()
-            if currentDiceArray.isEmpty {
-                startNewRoll()
-            }
-            getDieSides()
-            displayScore()
-            firstRoll = false
-            dieSelected = false
+        if currentDiceArray.isEmpty {
+            startNewRoll()
         } else {
-            selectScoringDieMessage(on: scene!, title: "Select a Scoring Die", message: GameConstants.Messages.NoScoringDieSelected)
-        }
-        for die in currentDiceArray {
-            if die.selected {
-                print("dieName: \(die.name!)")
+            resetDiePhysics()
+            hasScoringDice = false
+            if firstRoll {
+                currentDiceArray = diceArray
+                setupPlaceHoldersArray()
+                resetDieVariables()
+                resetDieCount()
+                rollDiceAction()
+                countDice()
+                dieSelected = true
+                firstRoll = false
+            } else {
+                if dieSelected {
+                    resetDieVariables()
+                    resetDieCount()
+                    rollDiceAction()
+                    countDice()
+                } else {
+                    selectScoringDieMessage(on: scene!, title: "Select a Scoring Die", message: GameConstants.Messages.NoScoringDieSelected)
+                }
             }
+            getScore()
+            displayScore()
+            if hasScoringDice {
+                displayScore()
+                firstRoll = false
+                dieSelected = false
+                hasScoringDice = false
+            } else {
+                for die in currentDiceArray {
+                    print("die: \(die.dieFace!.faceValue)")
+                }
+                runFarkleAction(isComplete: handlerBlock)
+                nextPlayer()
+            }
+            currentDiceArray.removeAll(where: {$0.selected})
         }
-        gameState = .InProgress
     }
 
     func addSixthDie() {
         if let Die6 = gameTable.childNode(withName: "Die6") as? Die {
             die6 = Die6
+            die5.selected = false
             die6.texture = GameConstants.Textures.Die6
             die6.dieFace = dieFace6
             die6PlaceHolder.position = GameConstants.Positions.Die6PlaceHolder
@@ -201,6 +210,7 @@ extension GameScene {
             diceArray.append(die6)
             currentDiceArray = diceArray
             placeHoldersArray.append(die6PlaceHolder)
+            currentPlaceHoldersArray = placeHoldersArray
         } else {
             print("die6 not found")
         }
@@ -215,8 +225,10 @@ extension GameScene {
             diceArray.removeLast()
             currentDiceArray = diceArray
             positionDice()
+            currentPlaceHoldersArray = placeHoldersArray
         } else {
             print("Only 5 dice available")
         }
+        currentPlaceHoldersArray = placeHoldersArray
     }
 }

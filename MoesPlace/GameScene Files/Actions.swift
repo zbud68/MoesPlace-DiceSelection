@@ -8,7 +8,7 @@
 import SpriteKit
 
 extension GameScene {
-    func rollDiceAction(isComplete: (Bool) -> Void) {
+    func rollDiceAction() {
         for die in currentDiceArray {
             var rollAction: SKAction = SKAction()
             let Wait = SKAction.wait(forDuration: 0.15)
@@ -18,6 +18,8 @@ extension GameScene {
             }
 
             let MoveAction = SKAction.run {
+                die.position = CGPoint(x: 0, y: 0)
+
                 let randomX = CGFloat(arc4random_uniform(5) + 5)
                 let randomY = CGFloat(arc4random_uniform(2) + 3)
 
@@ -30,11 +32,9 @@ extension GameScene {
             let Group = SKAction.group([rollAction, MoveAction])
             let Seq = SKAction.sequence([Group, Wait, getDieSides])
 
-            die.position = CGPoint(x: 0, y: 0)
+            resetDiePhysics()
             die.run(Seq)
         }
-        resetDiePhysics()
-        isComplete(true)
     }
 
     func runFarkleAction(isComplete: (Bool) -> Void) {
@@ -60,8 +60,12 @@ extension GameScene {
         let moveDie5 = SKAction.move(to: getFirstPlaceHolderPosiition(), duration: 0.1)
         let moveDie6 = SKAction.move(to: getFirstPlaceHolderPosiition(), duration: 0.1)
 
-        let nextPlayer = SKAction.run {
-            self.nextPlayer()
+        let farkleMessage = SKAction.run {
+            self.farkleMessage()
+        }
+
+        let resetDiceFaces = SKAction.run {
+            self.resetDieFaces()
         }
 
         let rotateDice = SKAction.run {
@@ -99,16 +103,20 @@ extension GameScene {
         let fadeIn = SKAction.fadeIn(withDuration: 0.20)
         let fadeTo = SKAction.fadeAlpha(to: 0.65, duration: 0.20)
 
-        let seq1 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait, moveDice1, nextPlayer])
+        let seq1 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait, moveDice1, farkleMessage, resetDiceFaces])
 
-        let seq2 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait, moveDice2, nextPlayer])
+        let seq2 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait, moveDice2, farkleMessage, resetDiceFaces])
 
         if numDice == 5 {
             logo.run(seq1)
         } else {
             logo.run(seq2)
         }
-        positionDice()
+        currentDiceArray = diceArray
+        for die in currentDiceArray {
+            die.selected = false
+            die.counted = false
+        }
         isComplete(true)
     }
 }
