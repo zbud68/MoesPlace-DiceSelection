@@ -38,19 +38,20 @@ extension GameScene {
     }
 
     func runFarkleAction(isComplete: (Bool) -> Void) {
-        let wait = SKAction.wait(forDuration: 1)
+        let wait = SKAction.wait(forDuration: 0.5)
+        let wait2 = SKAction.wait(forDuration: 0.25)
         let fadeOut = SKAction.fadeOut(withDuration: 0.20)
         let changeColorToRed = SKAction.run {
-            self.logo.zPosition = GameConstants.ZPositions.Dice + 0.5
+            self.logo.zPosition = self.die1.zPosition + 10
             self.logo.fontColor = UIColor.red
-            self.logo2.zPosition = self.logo.zPosition
+            self.logo2.zPosition = self.die1.zPosition + 10
             self.logo2.fontColor = UIColor.red
         }
         let changeColorBack = SKAction.run {
-            self.logo.zPosition = GameConstants.ZPositions.Logo
+            self.logo.zPosition = self.gameTable.zPosition + 10
             self.logo.fontColor = GameConstants.Colors.LogoFont
             self.logo2.fontColor = GameConstants.Colors.LogoFont
-            self.logo2.zPosition = GameConstants.ZPositions.Logo
+            self.logo2.zPosition = self.gameTable.zPosition + 10
         }
 
         let moveDie1 = SKAction.move(to: getFirstPlaceHolderPosiition(), duration: 0.1)
@@ -66,6 +67,7 @@ extension GameScene {
 
         let resetDiceFaces = SKAction.run {
             self.resetDieFaces()
+            self.resetDice()
         }
 
         let rotateDice = SKAction.run {
@@ -103,9 +105,9 @@ extension GameScene {
         let fadeIn = SKAction.fadeIn(withDuration: 0.20)
         let fadeTo = SKAction.fadeAlpha(to: 0.65, duration: 0.20)
 
-        let seq1 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait, moveDice1, farkleMessage, resetDiceFaces])
+        let seq1 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait2, moveDice1, resetDiceFaces, farkleMessage])
 
-        let seq2 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait, moveDice2, farkleMessage, resetDiceFaces])
+        let seq2 = SKAction.sequence([wait, fadeOut, changeColorToRed, fadeIn, fadeOut, fadeIn, fadeOut, fadeIn, fadeOut, changeColorBack, fadeTo, wait2, moveDice2, resetDiceFaces, farkleMessage])
 
         if numDice == 5 {
             logo.run(seq1)

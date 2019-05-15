@@ -46,11 +46,14 @@ extension GameScene {
     }
     
     func farkleMessage() {
-        //(on scene: SKScene, title: String, message: String) {
         let alert = UIAlertController(title: "Farkle", message: "You got a Farkle\n Next Player", preferredStyle: .alert)
-        
-        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil) }))
+
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: {
+            (action) in alert.dismiss(animated: true, completion: nil)
+            self.resetDieFaces()
+            self.positionDice(isComplete: self.handlerBlock)
+            self.nextPlayer()
+        }))
         
         scene?.view?.window?.rootViewController?.present(alert, animated: true, completion: nil)
     }

@@ -9,7 +9,28 @@
 import SpriteKit
 
 extension GameScene {
+    func setupPlayerScorePlaceHolders() {
+        if let Player1ScorePlaceHolder = scoresWindow.childNode(withName: "Player1ScorePlaceHolder") {
+            player1ScorePlaceHolder = Player1ScorePlaceHolder.position
+        }
+
+        if let Player2ScorePlaceHolder = scoresWindow.childNode(withName: "Player2ScorePlaceHolder") {
+            player2ScorePlaceHolder = Player2ScorePlaceHolder.position
+        }
+
+        if let Player3ScorePlaceHolder = scoresWindow.childNode(withName: "Player3ScorePlaceHolder") {
+            player3ScorePlaceHolder = Player3ScorePlaceHolder.position
+        }
+
+        if let Player4ScorePlaceHolder = scoresWindow.childNode(withName: "Player4ScorePlaceHolder") {
+            player4ScorePlaceHolder = Player4ScorePlaceHolder.position
+        }
+    }
+
     func setupNewGame() {
+        for player in playersArray {
+            scoresWindow.addChild(player.scoreLabel)
+        }
         gameState = .NewGame
         resetCurrentScoreVariables()
         resetArrays()
@@ -17,26 +38,29 @@ extension GameScene {
         resetDiePhysics()
         resetDieVariables()
         resetGameSettings()
-        resetPlaceHoldersArray()
+        resetPlaceHoldersArray(isComplete: handlerBlock)
+        firstRoll = true
     }
 
     func displayPlayerScore(playerName: String) {
+        currentPlayerScore = 0
         currentRollScore += currentScore
         score = currentRollScore
+        currentPlayerScore += score
 
         switch playerName {
         case "Player 1":
-            player1.score += score
-            player1.scoreLabel.text = String(player1.score)
+            player1.score += currentPlayerScore
+            player1.scoreLabel.text = "\(player1.score)"
         case "Player 2":
-            player2.score += score
-            player2.scoreLabel.text = String(player2.score)
+            player2.score += currentPlayerScore
+            player2.scoreLabel.text = "\(player2.score)"
         case "Player 3":
-            player3.score += score
-            player3.scoreLabel.text = String(player3.score)
+            player3.score += currentPlayerScore
+            player3.scoreLabel.text = "\(player3.score)"
         case "Player 4":
-            player4.score += score
-            player4.scoreLabel.text = String(player4.score)
+            player4.score += currentPlayerScore
+            player4.scoreLabel.text = "\(player4.score)"
         default:
             break
         }
@@ -87,15 +111,14 @@ extension GameScene {
         logo.fontSize = GameConstants.Sizes.Logo1Font
         logo.alpha = 0.35
         logo.position = CGPoint(x: 0, y: -50)
-        logo.zPosition = gameTable.zPosition + 1
+        logo.zPosition = gameTable.zPosition + 10
 
         logo2.fontName = GameConstants.StringConstants.FontName
         logo2.fontColor = maroonFontColor
         logo2.fontSize = GameConstants.Sizes.Logo2Font
         logo2.alpha = 0.35
         logo2.zRotation = 75
-
-        logo2.zPosition = logo.zPosition
+        logo2.zPosition = gameTable.zPosition + 10
         logo2.position = CGPoint(x: -185, y: -25)
         gameTable.addChild(logo)
         logo.addChild(logo2)
@@ -107,14 +130,14 @@ extension GameScene {
         playerNameLabel.fontColor = maroonFontColor
         playerNameLabel.fontSize = GameConstants.Sizes.PlayerNameLabelFont
         playerNameLabel.position = CGPoint(x: (gameTable.frame.minX) + ((gameTable.size.width) / 3), y: (gameTable.frame.maxY) / 2)
-        playerNameLabel.zPosition = GameConstants.ZPositions.NameLabel
+        playerNameLabel.zPosition = gameTable.zPosition + 10
         playerNameLabel.alpha = 0.65
 
         currentRollScoreLabel.fontName = GameConstants.StringConstants.FontName
         currentRollScoreLabel.fontColor = maroonFontColor
         currentRollScoreLabel.fontSize = GameConstants.Sizes.PlayerScoreLabelFont
         currentRollScoreLabel.position = CGPoint(x: playerNameLabel.position.x + 110, y: playerNameLabel.position.y)
-        currentRollScoreLabel.zPosition = GameConstants.ZPositions.ScoreLabel
+        currentRollScoreLabel.zPosition = gameTable.zPosition + 10
         currentRollScoreLabel.alpha = 0.65
 
         gameTable.addChild(currentRollScoreLabel)
@@ -122,24 +145,24 @@ extension GameScene {
     }
 
     func setupScoreLabel() {
-        currentPlayerNameLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
-        currentPlayerNameLabel.zPosition = gameTable.zPosition + 5
-        currentPlayerNameLabel.fontSize = 22
-        currentPlayerNameLabel.fontColor = maroonFontColor
-        currentPlayerNameLabel.alpha = 0.65
-        currentPlayerNameLabel.horizontalAlignmentMode = .right
-        currentPlayerNameLabel.position = CGPoint(x: 0, y: (gameTable.frame.midY + (gameTable.size.height / 4)))
+        playerNameLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
+        playerNameLabel.zPosition = gameTable.zPosition + 10
+        playerNameLabel.fontSize = 22
+        playerNameLabel.fontColor = maroonFontColor
+        playerNameLabel.alpha = 0.65
+        playerNameLabel.horizontalAlignmentMode = .left
+        playerNameLabel.position = CGPoint(x: 0, y: (gameTable.frame.midY + (gameTable.size.height / 4)))
 
         currentPlayerScoreLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
-        currentPlayerScoreLabel.text = "\(score)"
-        currentPlayerScoreLabel.zPosition = gameTable.zPosition + 5
+        currentPlayerScoreLabel.text = "\(currentPlayer.name):  \(score)"
+        currentPlayerScoreLabel.zPosition = gameTable.zPosition + 10
         currentPlayerScoreLabel.fontSize = 22
-        currentPlayerScoreLabel.fontColor = UIColor.black
+        currentPlayerScoreLabel.fontColor = maroonFontColor
         currentPlayerScoreLabel.alpha = 0.65
-        currentPlayerScoreLabel.horizontalAlignmentMode = .left
-        currentPlayerScoreLabel.position = CGPoint(x: 10, y: currentPlayerNameLabel.position.y)
+        currentPlayerScoreLabel.horizontalAlignmentMode = .center
+        currentPlayerScoreLabel.position = CGPoint(x: 0, y: playerNameLabel.position.y)
 
-        gameTable.addChild(currentPlayerNameLabel)
+        gameTable.addChild(playerNameLabel)
         gameTable.addChild(currentPlayerScoreLabel)
     }
 
@@ -218,35 +241,35 @@ extension GameScene {
         mainMenuLabel.fontName = GameConstants.StringConstants.FontName
         mainMenuLabel.fontSize = GameConstants.Sizes.MainMenuFont
         mainMenuLabel.fontColor = maroonFontColor
-        mainMenuLabel.zPosition = GameConstants.ZPositions.MenuLabel
+        mainMenuLabel.zPosition = mainMenu.zPosition + 10
         mainMenuLabel.position = CGPoint(x: 0, y: mainMenu.frame.maxY - (mainMenuLabel.fontSize + (mainMenuLabel.fontSize / 3)))
 
         newGameButtonLabel.text = "New Game"
         newGameButtonLabel.fontName = GameConstants.StringConstants.FontName
         newGameButtonLabel.fontSize = GameConstants.Sizes.ButtonLabelFont
         newGameButtonLabel.fontColor = maroonFontColor
-        newGameButtonLabel.zPosition = GameConstants.ZPositions.ButtonLabel
+        newGameButtonLabel.zPosition = mainMenu.zPosition + 10
         newGameButtonLabel.position = CGPoint(x: 65, y: -8)
 
         resumeButtonLabel.text = "Continue"
         resumeButtonLabel.fontName = GameConstants.StringConstants.FontName
         resumeButtonLabel.fontSize = GameConstants.Sizes.ButtonLabelFont
         resumeButtonLabel.fontColor = maroonFontColor
-        resumeButtonLabel.zPosition = GameConstants.ZPositions.ButtonLabel
+        resumeButtonLabel.zPosition = mainMenu.zPosition + 10
         resumeButtonLabel.position = CGPoint(x: 59, y: -8)
 
         settingsButtonLabel.text = "Settings"
         settingsButtonLabel.fontName = GameConstants.StringConstants.FontName
         settingsButtonLabel.fontSize = GameConstants.Sizes.ButtonLabelFont
         settingsButtonLabel.fontColor = maroonFontColor
-        settingsButtonLabel.zPosition = GameConstants.ZPositions.ButtonLabel
+        settingsButtonLabel.zPosition = mainMenu.zPosition + 10
         settingsButtonLabel.position = CGPoint(x: 58, y: -8)
 
         exitButtonLabel.text = "Exit Game"
         exitButtonLabel.fontName = GameConstants.StringConstants.FontName
         exitButtonLabel.fontSize = GameConstants.Sizes.ButtonLabelFont
         exitButtonLabel.fontColor = maroonFontColor
-        exitButtonLabel.zPosition = GameConstants.ZPositions.ButtonLabel
+        exitButtonLabel.zPosition = mainMenu.zPosition + 10
         exitButtonLabel.position = CGPoint(x: 67, y: -8)
     }
 
@@ -255,21 +278,21 @@ extension GameScene {
         settingsMenuLabel.fontName = GameConstants.StringConstants.FontName
         settingsMenuLabel.fontSize = GameConstants.Sizes.MainMenuFont
         settingsMenuLabel.fontColor = maroonFontColor
-        settingsMenuLabel.zPosition = GameConstants.ZPositions.MenuLabel
+        settingsMenuLabel.zPosition = settingsMenu.zPosition + 10
         settingsMenuLabel.position = CGPoint(x: 0, y: settingsMenu.frame.maxY - (settingsMenuLabel.fontSize + (settingsMenuLabel.fontSize / 3)))
 
         soundButtonLabel.text = "Sound"
         soundButtonLabel.fontName = GameConstants.StringConstants.FontName
         soundButtonLabel.fontSize = GameConstants.Sizes.ButtonLabelFont
         soundButtonLabel.fontColor = maroonFontColor
-        soundButtonLabel.zPosition = GameConstants.ZPositions.ButtonLabel
+        soundButtonLabel.zPosition = settingsMenu.zPosition + 10
         soundButtonLabel.position = CGPoint(x: 65, y: -8)
 
         backButtonLabel.text = "Back"
         backButtonLabel.fontName = GameConstants.StringConstants.FontName
         backButtonLabel.fontSize = GameConstants.Sizes.ButtonLabelFont
         backButtonLabel.fontColor = maroonFontColor
-        backButtonLabel.zPosition = GameConstants.ZPositions.ButtonLabel
+        backButtonLabel.zPosition = settingsMenu.zPosition + 10
         backButtonLabel.position = CGPoint(x: 59, y: -8)
 
         numPlayersLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
@@ -279,7 +302,7 @@ extension GameScene {
         numPlayersLabel.horizontalAlignmentMode = .center
         numPlayersLabel.verticalAlignmentMode = .center
         numPlayersLabel.position = CGPoint(x: -17, y: -32)
-        numPlayersLabel.zPosition = 50
+        numPlayersLabel.zPosition = settingsMenu.zPosition + 10
 
         targetScoreLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
         targetScoreLabel.text = "Target Score: \(targetScore)"
@@ -288,7 +311,7 @@ extension GameScene {
         targetScoreLabel.horizontalAlignmentMode = .center
         targetScoreLabel.verticalAlignmentMode = .center
         targetScoreLabel.position = CGPoint(x: -17, y: -13)
-        targetScoreLabel.zPosition = 50
+        targetScoreLabel.zPosition = settingsMenu.zPosition + 10
 
         settingsMenu.addChild(numPlayersLabel)
         settingsMenu.addChild(targetScoreLabel)

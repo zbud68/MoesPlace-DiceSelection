@@ -69,8 +69,10 @@ extension GameScene {
             selectScoringDieMessage(on: scene!, title: "Select a Scoring Die", message: GameConstants.Messages.NoScoringDieSelected)
         } else {
             displayPlayerScore(playerName: currentPlayer.name)
+            print("\(currentPlayer.name): \(currentPlayer.score)")
             dieSelected = false
         }
+        resetDice()
         nextPlayer()
     }
 }

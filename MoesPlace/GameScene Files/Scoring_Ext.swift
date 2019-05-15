@@ -131,18 +131,18 @@ extension GameScene {
         case "FullHouse":
             print("FullHouse found")
             currentScore = 1250
-            positionDice()
+            positionDice(isComplete: handlerBlock)
             startNewRoll()
         case "Straight":
             print("Straight found")
             currentScore = 1500
-            positionDice()
+            positionDice(isComplete: handlerBlock)
             startNewRoll()
         case "ThreePair":
             print("Three Pair Found")
             currentScore = 500
             pairs = 0
-            positionDice()
+            positionDice(isComplete: handlerBlock)
             startNewRoll()
         case "ThreeOAK":
             print("Three of a kind found")
@@ -173,10 +173,10 @@ extension GameScene {
     func moveSelectedDice(count: Int, isComplete: (Bool) -> Void) {
         if count >= 3 {
             for die in currentDiceArray where die.dieFace!.countThisRoll == count {
+                die.position = getFirstPlaceHolderPosiition()
                 die.zRotation = 0
                 die.physicsBody = nil
-                die.zPosition = GameConstants.ZPositions.GameTable + 5
-                die.position = getFirstPlaceHolderPosiition()
+                die.zPosition = gameTable.zPosition + 10
             }
             resetDiePhysics()
         }
@@ -185,8 +185,18 @@ extension GameScene {
 
     //MARK: ********** Get First Place Holder Position **********
     func getFirstPlaceHolderPosiition() -> (CGPoint) {
+        var nextPosition = CGPoint()
+        nextPosition = currentPlaceHoldersArray[0].position
+        currentPlaceHoldersArray.removeFirst()
+
+        if currentPlaceHoldersArray.isEmpty {
+            resetPlaceHoldersArray(isComplete: handlerBlock)
+        }
+        return nextPosition
+        /*
         if firstRoll {
-            setupPlaceHoldersArray()
+            resetPlaceHoldersArray()
+            currentIndexes = placeHolderIndexArray
         }
         var nextPosition = CGPoint()
         if currentIndexes.isEmpty {
@@ -196,6 +206,7 @@ extension GameScene {
         nextPosition = currentPlaceHoldersArray[placeHolderIndex].position
         currentIndexes.removeFirst()
         return (nextPosition)
+        */
    }
 
    func calcMultiDieScore(count: Int) -> Int {

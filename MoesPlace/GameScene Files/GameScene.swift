@@ -21,19 +21,17 @@ let handlerBlock: (Bool) -> Void = {
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-
-    var currentPlayerNameLabel: SKLabelNode!
-    var currentPlayerName = String() {
-
+    //var scoreLabel: SKLabelNode!
+    var currentPlayerScore = 0 {
         didSet {
-            currentPlayerNameLabel = SKLabelNode(fontNamed: "Marker Felt Wide")
-            currentPlayerNameLabel.text = currentPlayerName
+            currentPlayer.scoreLabel.text = "\(currentPlayerScore)"
         }
     }
 
     var currentPlayerScoreLabel: SKLabelNode!
     var score = 0 {
         didSet {
+            currentPlayerScoreLabel.fontColor = maroonFontColor
             currentPlayerScoreLabel.text = "\(currentPlayer.name):  \(score)"
         }
     }
@@ -92,6 +90,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var player2 = Player(name: "Player 2", score: 0, nameLabel: SKLabelNode(fontNamed: "Marker Felt Wide"))
     var player3 = Player(name: "Player 3", score: 0, nameLabel: SKLabelNode(fontNamed: "Marker Felt Wide"))
     var player4 = Player(name: "Player 4", score: 0, nameLabel: SKLabelNode(fontNamed: "Marker Felt Wide"))
+    var player1ScorePlaceHolder: CGPoint!
+    var player2ScorePlaceHolder: CGPoint!
+    var player3ScorePlaceHolder: CGPoint!
+    var player4ScorePlaceHolder: CGPoint!
 
     let maxNumPlayers = 4
     var currentPlayerID: Int = 0
@@ -297,18 +299,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func nextPlayer() {
         resetForNextPlayer()
         print("next Player")
+        resetDice()
         if currentPlayerID < playersArray.count - 1 {
             currentPlayerID += 1
         } else {
             currentPlayerID = 0
         }
         currentPlayer = playersArray[currentPlayerID]
-        playerNameLabel.text = "\(currentPlayer!.name):"
+        //playerNameLabel.text = "\(currentPlayer!.name):"
     }
 
     func startNewRoll() {
         print("\nstarting new roll\n")
-        resetPlaceHoldersArray()
+        resetPlaceHoldersArray(isComplete: handlerBlock)
         resetDice()
         resetDieVariables()
         firstRoll = true

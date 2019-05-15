@@ -23,17 +23,13 @@ extension GameScene {
     func resetPlaceHolders() {
         placeHoldersArray.removeAll()
         currentPlaceHoldersArray.removeAll()
-        placeHolderIndexArray.removeAll()
+        //placeHolderIndexArray.removeAll()
 
         placeHoldersArray = [ die1PlaceHolder, die2PlaceHolder, die3PlaceHolder, die4PlaceHolder, die5PlaceHolder]
         if currentGame.numDice == 6 {
             placeHoldersArray.append(die6PlaceHolder)
         }
-        for (index, _) in placeHoldersArray.enumerated() {
-            placeHolderIndexArray.append(index)
-        }
         currentPlaceHoldersArray = placeHoldersArray
-        placeHolderIndex = 0
     }
 
     func resetPlayers() {
@@ -79,21 +75,24 @@ extension GameScene {
         diceArray = [die1, die2, die3, die4, die5]
 
         for die in diceArray {
-            die.zPosition = gameTable.zPosition + 5
+            removeDiePhysics(die: die)
+            die.zPosition = gameTable.zPosition + 25
+            die.zRotation = 0
         }
         currentDiceArray = diceArray
+        resetDieFaces()
+        positionDice(isComplete: handlerBlock)
         resetDiePhysics()
-        positionDice()
-    }
+     }
 
     func resetForNextPlayer() {
         currentDiceArray = diceArray
-        resetPlaceHoldersArray()
+        resetPlaceHoldersArray(isComplete: handlerBlock)
         resetCurrentScoreVariables()
         resetDice()
         resetDieVariables()
         resetArrays()
-        positionDice()
+        positionDice(isComplete: handlerBlock)
         firstRoll = true
         hasScoringDice = false
         dieSelected = false
@@ -132,10 +131,11 @@ extension GameScene {
             die.physicsBody?.restitution = 0.5
             die.physicsBody?.linearDamping = 4
             die.physicsBody?.angularDamping = 5
+            //die.zRotation = 0
         }
     }
 
-    func resetPlaceHoldersArray() {
+    func resetPlaceHoldersArray(isComplete: (Bool) -> Void) {
         placeHoldersArray.removeAll()
         placeHoldersArray = [die1PlaceHolder, die2PlaceHolder, die3PlaceHolder, die4PlaceHolder, die5PlaceHolder]
         if numDice == 6 {
@@ -148,6 +148,7 @@ extension GameScene {
         currentPlaceHoldersArray = placeHoldersArray
         currentIndexes = placeHolderIndexArray
         placeHolderIndex = 0
+        isComplete(true)
     }
 
     func resetScoringCombosArray() {

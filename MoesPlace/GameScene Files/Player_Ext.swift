@@ -39,26 +39,30 @@ extension GameScene {
     }
 
     func positionPlayerLabels() {
+        setupPlayerScorePlaceHolders()
+        currentPlayerScore = 0
         for player in playersArray {
             player.scoreLabel.fontName =
-                "Markder Felt Wide"
+                "Marker Felt Wide"
             player.scoreLabel.fontSize = GameConstants.Sizes.PlayerScoreLabelFont
             player.scoreLabel.fontColor = maroonFontColor
-            player.scoreLabel.zPosition = scoresWindow.zPosition + 100
-            
+            player.scoreLabel.zPosition = scoresWindow.zPosition + 10
+            player.scoreLabel.text = "\(currentPlayerScore)"
+            scoresWindow.addChild(player.scoreLabel)
+
             switch player.name {
             case "Player 1":
-                player1.scoreLabel.position = CGPoint(x: 0, y: ((scoresWindow.frame.maxY / 4) + (scoresWindow.size.height / 4)) - 10)
+                player1.scoreLabel.position = CGPoint(x: 0, y: 71)
             case "Player 2":
-                player2.scoreLabel.position = CGPoint(x: 0, y: (scoresWindow.size.height / 8) - (scoresWindow.frame.maxY / 4))
+                player2.scoreLabel.position = CGPoint(x: 0, y: 13)
             case "Player 3":
-                player3.scoreLabel.position = CGPoint(x: 0, y: (scoresWindow.size.height / 8) - (scoresWindow.frame.maxY) - 10)
+                player3.scoreLabel.position = CGPoint(x: 0, y: -46)
             case "Player 4":
-                player4.scoreLabel.position = CGPoint(x: 0, y: (scoresWindow.frame.minY) + (scoresWindow.size.height / 4) + 15)
+                player4.scoreLabel.position = CGPoint(x: 0, y: -102)
             default:
                 break
+
             }
-            scoresWindow.addChild(player.scoreLabel)
         }
     }
 }

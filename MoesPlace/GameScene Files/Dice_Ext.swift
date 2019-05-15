@@ -44,7 +44,7 @@ extension GameScene {
 
     func setupPlaceHoldersArray() {
         placeHoldersArray.removeAll()
-        if numDice == 6 {
+        if currentGame.numDice == 6 {
             if let Die6PlaceHolder = gameTable.childNode(withName: "Die6PlaceHolder") as? SKSpriteNode {
                 die6PlaceHolder = Die6PlaceHolder
             } else {
@@ -53,7 +53,7 @@ extension GameScene {
             die6PlaceHolder.position = CGPoint(x: -250, y: -120)
         }
         placeHoldersArray = [ die1PlaceHolder, die2PlaceHolder, die3PlaceHolder, die4PlaceHolder, die5PlaceHolder]
-        if numDice == 6 {
+        if currentGame.numDice == 6 {
             placeHoldersArray.append(die6PlaceHolder)
         }
         for (index, _) in placeHoldersArray.enumerated() {
@@ -118,21 +118,20 @@ extension GameScene {
 
         diceArray = [die1, die2, die3, die4, die5]
         for die in diceArray {
-            die.zPosition = gameTable.zPosition + 5
+            die.zPosition = gameTable.zPosition + 20
         }
         currentDiceArray = diceArray
-        positionDice()
+        positionDice(isComplete: handlerBlock)
     }
 
-    func positionDice() {
-        resetPlaceHoldersArray()
+    func positionDice(isComplete: (Bool) -> Void) {
+        resetPlaceHoldersArray(isComplete: handlerBlock)
         for die in currentDiceArray {
-            die.physicsBody = nil
-            die.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            die.zRotation = 0
+            removeDiePhysics(die: die)
             die.position = getFirstPlaceHolderPosiition()
         }
         resetDiePhysics()
+        isComplete(true)
     }
 
     func setDieSides(die: Die) {
@@ -193,7 +192,7 @@ extension GameScene {
                     print("die: \(die.dieFace!.faceValue)")
                 }
                 runFarkleAction(isComplete: handlerBlock)
-                nextPlayer()
+                //nextPlayer()
             }
             currentDiceArray.removeAll(where: {$0.selected})
         }
@@ -224,11 +223,25 @@ extension GameScene {
             placeHoldersArray.removeLast()
             diceArray.removeLast()
             currentDiceArray = diceArray
-            positionDice()
+            positionDice(isComplete: handlerBlock)
             currentPlaceHoldersArray = placeHoldersArray
         } else {
             print("Only 5 dice available")
         }
         currentPlaceHoldersArray = placeHoldersArray
+    }
+
+    func removeDiePhysics(die: Die) {
+        die.physicsBody = nil
+        die.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        die.physicsBody?.affectedByGravity = false
+        die.physicsBody?.isDynamic = false
+        die.physicsBody?.allowsRotation = false
+        die.physicsBody?.categoryBitMask = 0
+        die.physicsBody?.contactTestBitMask = 0
+        die.physicsBody?.collisionBitMask = 0
+        die.physicsBody?.restitution = 0
+        die.physicsBody?.linearDamping = 0
+        die.physicsBody?.angularDamping = 0
     }
 }
